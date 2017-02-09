@@ -14,6 +14,9 @@
 		33AC3ABA1E35F2FD00B00CF6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33AC3AB81E35F2FD00B00CF6 /* LaunchScreen.storyboard */; };
 		33AC3AC51E35F2FD00B00CF6 /* driverqualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3AC41E35F2FD00B00CF6 /* driverqualityTests.swift */; };
 		33AC3AD01E35F2FD00B00CF6 /* driverqualityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */; };
+		33F053691E48BC2100BA93E0 /* bikehike_course.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 33F053681E48BC2100BA93E0 /* bikehike_course.gpx */; };
+		33F0536B1E48BCEF00BA93E0 /* bikehike_course(1).gpx in Resources */ = {isa = PBXBuildFile; fileRef = 33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */; };
+		33FCC4CA1E44C47900A4B5E4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FCC4C91E44C47900A4B5E4 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,9 @@
 		33AC3ACB1E35F2FD00B00CF6 /* driverqualityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = driverqualityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = driverqualityUITests.swift; sourceTree = "<group>"; };
 		33AC3AD11E35F2FD00B00CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		33F053681E48BC2100BA93E0 /* bikehike_course.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = bikehike_course.gpx; path = ../../Downloads/bikehike_course.gpx; sourceTree = "<group>"; };
+		33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "bikehike_course(1).gpx"; path = "../../Downloads/bikehike_course(1).gpx"; sourceTree = "<group>"; };
+		33FCC4C91E44C47900A4B5E4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33FCC4CA1E44C47900A4B5E4 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +88,7 @@
 				33AC3AC31E35F2FD00B00CF6 /* driverqualityTests */,
 				33AC3ACE1E35F2FD00B00CF6 /* driverqualityUITests */,
 				33AC3AAD1E35F2FD00B00CF6 /* Products */,
+				33FCC4C81E44C47900A4B5E4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,6 +131,16 @@
 				33AC3AD11E35F2FD00B00CF6 /* Info.plist */,
 			);
 			path = driverqualityUITests;
+			sourceTree = "<group>";
+		};
+		33FCC4C81E44C47900A4B5E4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */,
+				33F053681E48BC2100BA93E0 /* bikehike_course.gpx */,
+				33FCC4C91E44C47900A4B5E4 /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,12 +205,16 @@
 		33AC3AA41E35F2FC00B00CF6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Jesper Bränn";
 				TargetAttributes = {
 					33AC3AAB1E35F2FC00B00CF6 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 8D4ZPD9WL8;
 						ProvisioningStyle = Automatic;
 					};
 					33AC3ABF1E35F2FD00B00CF6 = {
@@ -232,8 +254,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33F053691E48BC2100BA93E0 /* bikehike_course.gpx in Resources */,
 				33AC3ABA1E35F2FD00B00CF6 /* LaunchScreen.storyboard in Resources */,
 				33AC3AB71E35F2FD00B00CF6 /* Assets.xcassets in Resources */,
+				33F0536B1E48BCEF00BA93E0 /* bikehike_course(1).gpx in Resources */,
 				33AC3AB51E35F2FD00B00CF6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8D4ZPD9WL8;
 				INFOPLIST_FILE = driverquality/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bontouch.thesis.driverquality;
@@ -424,6 +449,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8D4ZPD9WL8;
 				INFOPLIST_FILE = driverquality/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bontouch.thesis.driverquality;
@@ -505,6 +531,7 @@
 				33AC3AD61E35F2FD00B00CF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		33AC3AD71E35F2FD00B00CF6 /* Build configuration list for PBXNativeTarget "driverqualityTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +540,7 @@
 				33AC3AD91E35F2FD00B00CF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		33AC3ADA1E35F2FD00B00CF6 /* Build configuration list for PBXNativeTarget "driverqualityUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +549,7 @@
 				33AC3ADC1E35F2FD00B00CF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
