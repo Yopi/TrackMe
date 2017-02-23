@@ -10,13 +10,26 @@ import UIKit
 import MapKit
 import CoreLocation
 import CoreMotion
+import Foundation
 
+//: ### Defining the protocols
 protocol JSONRepresentable {
     var JSONRepresentation: Any { get }
 }
 
+
+extension Date: JSONRepresentable {
+    var JSONRepresentation: Any {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        
+        return formatter.string(from: self)
+    }
+}
+
 protocol JSONSerializable: JSONRepresentable {}
 
+//: ### Implementing the functionality through protocol extensions
 extension JSONSerializable {
     var JSONRepresentation: Any {
         var representation = [String: Any]()
@@ -52,6 +65,7 @@ extension JSONSerializable {
         let representation = JSONRepresentation
         
         guard JSONSerialization.isValidJSONObject(representation) else {
+            print(representation)
             print("Invalid JSON Representation")
             return nil
         }
@@ -66,7 +80,17 @@ extension JSONSerializable {
     }
 }
 
-struct SensorData : JSONSerializable {
+
+struct AllSensorData {
+    var phone_udid: String
+    var time: Date
+    var data: [SensorData]
+}
+
+struct SensorData {
+    var time: Date
+    var phone_udid: String
+    
     var longitude: Double
     var latitude: Double
 
@@ -119,15 +143,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var gravity : UILabel!
     @IBOutlet weak var userAcceleration : UILabel!
     @IBOutlet weak var magneticField : UILabel!
+    
+    @IBOutlet weak var runningTime : UILabel!
+    @IBOutlet weak var sizeOfData : UILabel!
 
     let manager = CMMotionManager()
     var locationManager: CLLocationManager!
     var lastUpdateMap : Double = 0.0
     var lastCoordinatesMap : CLLocationCoordinate2D!
-    var sensorData = SensorData(longitude: 0, latitude: 0, accelerometerX: 0, accelerometerY: 0, accelerometerZ: 0, gyroscopeX: 0, gyroscopeY: 0, gyroscopeZ: 0, magnetometerX: 0, magnetometerY: 0, magnetometerZ: 0, roll: 0, pitch: 0, yaw: 0, rotationX: 0, rotationY: 0, rotationZ: 0, gravityX: 0, gravityY: 0, gravityZ: 0, userAccelerationX: 0, userAccelerationY: 0, userAccelerationZ: 0, magneticFieldX: 0, magneticFieldY: 0, magneticFieldZ: 0)
+    var sensorData = SensorData(time: Date.init(), phone_udid: (UIDevice.current.identifierForVendor?.uuidString)!, longitude: 0, latitude: 0, accelerometerX: 0, accelerometerY: 0, accelerometerZ: 0, gyroscopeX: 0, gyroscopeY: 0, gyroscopeZ: 0, magnetometerX: 0, magnetometerY: 0, magnetometerZ: 0, roll: 0, pitch: 0, yaw: 0, rotationX: 0, rotationY: 0, rotationZ: 0, gravityX: 0, gravityY: 0, gravityZ: 0, userAccelerationX: 0, userAccelerationY: 0, userAccelerationZ: 0, magneticFieldX: 0, magneticFieldY: 0, magneticFieldZ: 0)
     
-    var allSensorData: [SensorData] = []
+    var allSensorData = AllSensorData(phone_udid: (UIDevice.current.identifierForVendor?.uuidString)!, time: Date.init(), data: [])
     weak var timer: Timer?
+    var running : Bool = false
+    var startTime : Date = Date.init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,7 +171,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         map.delegate = self
         
         // For use in foreground
-        locationManager.requestWhenInUseAuthorization()
         // For use in background
         locationManager.requestAlwaysAuthorization()
 
@@ -170,7 +198,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             map.setCenter(coor, animated: true)
         }
         
-        if manager.isDeviceMotionActive {
+        if running {
             print("Stop")
             locationManager.stopUpdatingLocation()
             startButton.setTitle("Start", for: .normal)
@@ -189,10 +217,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             magneticField.text = ""
             stopTimer()
             saveData()
+            running = false
+            self.runningTime.text = "Running: " + String(format: "%.2f", Date.init().timeIntervalSince(startTime)) + "s"
         } else {
+            running = true
             startButton.setTitle("Stop", for: .normal)
             locationManager.startUpdatingLocation()
             startTimer()
+            startTime = Date.init()
+            self.runningTime.text = ""
+            self.sizeOfData.text = ""
+
             if manager.isGyroAvailable {
                 print("Gyro available!")
                 manager.gyroUpdateInterval = 0.1
@@ -282,7 +317,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        
+        print("yo")
+
         centerMap(locValue)
     }
     
@@ -308,7 +344,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let newRegion = MKCoordinateRegion(center:center , span: MKCoordinateSpanMake(spanX, spanY))
         map.setRegion(newRegion, animated: true)
         
-        
 //        let annotation = MKPointAnnotation()
 //        annotation.coordinate = center
 //        annotation.title = self.currentTime()
@@ -332,7 +367,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // Callback to actually add PolyLine to map
     func mapView(_ mapView: MKMapView!, rendererFor overlay: MKOverlay!) -> MKOverlayRenderer! {
         if (overlay is MKPolyline) {
-            var pr = MKPolylineRenderer(overlay: overlay)
+            let pr = MKPolylineRenderer(overlay: overlay)
             pr.strokeColor = UIColor.red.withAlphaComponent(0.5)
             pr.lineWidth = 5
             return pr
@@ -342,18 +377,59 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func saveData() {
-        var sensorDataJSON = allSensorData.map({
-            (value: SensorData) -> String in
-            return value.toJSON()!
-        })
-        let sensorDataAsString = "[" + sensorDataJSON.joined(separator: ",") + "]"
-        print(sensorDataAsString)
+        do {
+        let dictionary: WrappedDictionary = try wrap(self.allSensorData)
+        let sensorDataAsString = String(describing: dictionary)
+        print("Bytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)))
+        print("KiloBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024))
+        print("MegaBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1048576))
+        self.sizeOfData.text = String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024) + "KB"
+
+        let json = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+        let jsonstring = String(data: json, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+
+        var request = URLRequest(url: URL(string: "http://sensor.jesper.im/save")!)
+//        var request = URLRequest(url: URL(string: "http://10.0.5.243:9292/save")!)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = json
+        print(request)
+        URLSession.shared.dataTask(with:request, completionHandler: {(data, response, error) in
+            if error != nil {
+//                print(error)
+            } else {
+                do {
+                    guard let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any] else { return }
+                    
+                    guard let errors = json?["errors"] as? [[String: Any]] else { return }
+                    if errors.count > 0 {
+                        // show error
+                        return
+                    } else {
+                        // show confirmation
+                    }
+                }
+            }
+        }).resume()
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     
     func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            self?.allSensorData.append((self?.sensorData)!)
+            self?.sensorData.time = Date.init()
+            self?.allSensorData.data.append((self?.sensorData)!)
+            print(self?.sensorData.time)
+//            do {
+//            let dictionary: WrappedDictionary = try wrap(self?.allSensorData)
+//            let json = try JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
+//            let string = String(data: json, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+//
+//            } catch {
+//            print(error.localizedDescription)
+//            }
         }
     }
     

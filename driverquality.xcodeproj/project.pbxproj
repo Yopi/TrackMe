@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33772A201E5DAE1F00DF7BF3 /* Wrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33772A1F1E5DAE1F00DF7BF3 /* Wrap.swift */; };
 		33AC3AB01E35F2FD00B00CF6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3AAF1E35F2FD00B00CF6 /* AppDelegate.swift */; };
 		33AC3AB21E35F2FD00B00CF6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3AB11E35F2FD00B00CF6 /* ViewController.swift */; };
 		33AC3AB51E35F2FD00B00CF6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33AC3AB31E35F2FD00B00CF6 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		33772A1F1E5DAE1F00DF7BF3 /* Wrap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrap.swift; sourceTree = "<group>"; };
 		33AC3AAC1E35F2FD00B00CF6 /* driverquality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = driverquality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33AC3AAF1E35F2FD00B00CF6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33AC3AB11E35F2FD00B00CF6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 		33AC3AAE1E35F2FD00B00CF6 /* driverquality */ = {
 			isa = PBXGroup;
 			children = (
+				33772A1F1E5DAE1F00DF7BF3 /* Wrap.swift */,
 				33AC3AAF1E35F2FD00B00CF6 /* AppDelegate.swift */,
 				33AC3AB11E35F2FD00B00CF6 /* ViewController.swift */,
 				33AC3AB31E35F2FD00B00CF6 /* Main.storyboard */,
@@ -216,6 +219,11 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 8D4ZPD9WL8;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					33AC3ABF1E35F2FD00B00CF6 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -285,6 +293,7 @@
 			files = (
 				33AC3AB21E35F2FD00B00CF6 /* ViewController.swift in Sources */,
 				33AC3AB01E35F2FD00B00CF6 /* AppDelegate.swift in Sources */,
+				33772A201E5DAE1F00DF7BF3 /* Wrap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
