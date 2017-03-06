@@ -15,6 +15,7 @@
 		33AC3ABA1E35F2FD00B00CF6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33AC3AB81E35F2FD00B00CF6 /* LaunchScreen.storyboard */; };
 		33AC3AC51E35F2FD00B00CF6 /* driverqualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3AC41E35F2FD00B00CF6 /* driverqualityTests.swift */; };
 		33AC3AD01E35F2FD00B00CF6 /* driverqualityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */; };
+		33BC29371E65D51400B7496A /* star_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 33BC29361E65D51400B7496A /* star_64.png */; };
 		33F053691E48BC2100BA93E0 /* bikehike_course.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 33F053681E48BC2100BA93E0 /* bikehike_course.gpx */; };
 		33F0536B1E48BCEF00BA93E0 /* bikehike_course(1).gpx in Resources */ = {isa = PBXBuildFile; fileRef = 33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */; };
 		33FCC4CA1E44C47900A4B5E4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FCC4C91E44C47900A4B5E4 /* MapKit.framework */; };
@@ -52,6 +53,7 @@
 		33AC3ACB1E35F2FD00B00CF6 /* driverqualityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = driverqualityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = driverqualityUITests.swift; sourceTree = "<group>"; };
 		33AC3AD11E35F2FD00B00CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		33BC29361E65D51400B7496A /* star_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_64.png; sourceTree = "<group>"; };
 		33F053681E48BC2100BA93E0 /* bikehike_course.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = bikehike_course.gpx; path = ../../Downloads/bikehike_course.gpx; sourceTree = "<group>"; };
 		33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "bikehike_course(1).gpx"; path = "../../Downloads/bikehike_course(1).gpx"; sourceTree = "<group>"; };
 		33FCC4C91E44C47900A4B5E4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -111,6 +113,7 @@
 				33AC3AAF1E35F2FD00B00CF6 /* AppDelegate.swift */,
 				33AC3AB11E35F2FD00B00CF6 /* ViewController.swift */,
 				33AC3AB31E35F2FD00B00CF6 /* Main.storyboard */,
+				33BC29361E65D51400B7496A /* star_64.png */,
 				33AC3AB61E35F2FD00B00CF6 /* Assets.xcassets */,
 				33AC3AB81E35F2FD00B00CF6 /* LaunchScreen.storyboard */,
 				33AC3ABB1E35F2FD00B00CF6 /* Info.plist */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33F053691E48BC2100BA93E0 /* bikehike_course.gpx in Resources */,
+				33BC29371E65D51400B7496A /* star_64.png in Resources */,
 				33AC3ABA1E35F2FD00B00CF6 /* LaunchScreen.storyboard in Resources */,
 				33AC3AB71E35F2FD00B00CF6 /* Assets.xcassets in Resources */,
 				33F0536B1E48BCEF00BA93E0 /* bikehike_course(1).gpx in Resources */,
@@ -445,6 +449,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 8D4ZPD9WL8;
 				INFOPLIST_FILE = driverquality/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -458,6 +463,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 8D4ZPD9WL8;
 				INFOPLIST_FILE = driverquality/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
