@@ -8,6 +8,8 @@
 
 import UIKit
 import MapKit
+import AVKit
+import AVFoundation
 import CoreLocation
 import CoreMotion
 import Foundation
@@ -68,6 +70,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var scrollView : UIScrollView!
     @IBOutlet weak var map : MKMapView!
 
+    @IBOutlet weak var smooth: UISwitch!
     @IBOutlet weak var gps : UILabel!
     @IBOutlet weak var speed : UILabel!
 
@@ -89,10 +92,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var lastCoordinatesMap : CLLocationCoordinate2D!
     var sensorData = SensorData(time: Date.init(), phone_udid: (UIDevice.current.identifierForVendor?.uuidString)!, longitude: 0, latitude: 0, speed: 0, accelerometerX: 0, accelerometerY: 0, accelerometerZ: 0, gyroscopeX: 0, gyroscopeY: 0, gyroscopeZ: 0, magnetometerX: 0, magnetometerY: 0, magnetometerZ: 0, roll: 0, pitch: 0, yaw: 0, rotationX: 0, rotationY: 0, rotationZ: 0, gravityX: 0, gravityY: 0, gravityZ: 0, userAccelerationX: 0, userAccelerationY: 0, userAccelerationZ: 0, magneticFieldX: 0, magneticFieldY: 0, magneticFieldZ: 0)
     
-    var allSensorData = AllSensorData(phone_udid: (UIDevice.current.identifierForVendor?.uuidString)!, name: "", time: Date.init(), smooth: 0, data: [])
+    var allSensorData = AllSensorData(phone_udid: (UIDevice.current.identifierForVendor?.uuidString)!, name: "", time: Date.init(), smooth: 1, data: [])
     weak var timer: Timer?
     var running : Bool = false
     var startTime : Date = Date.init()
+    var player: AVAudioPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,6 +118,22 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
         } else{
             print("Not allowed to GPS")
+        }
+        
+        let url = Bundle.main.url(forResource: "silence", withExtension: "mp3")!
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+            guard let player = player else { return }
+            
+            
+            let audioSession = AVAudioSession.sharedInstance()
+            try!audioSession.setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers)
+            
+            player.prepareToPlay()
+            player.volume = 1
+            player.numberOfLoops = -1;
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
     
@@ -179,6 +199,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             saveData()
             running = false
             self.runningTime.text = "Running: " + String(format: "%.2f", Date.init().timeIntervalSince(startTime)) + "s"
+            self.player?.stop()
+
         } else {
             running = true
             startButton.setTitle("Stop", for: .normal)
@@ -187,6 +209,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             startTime = Date.init()
             self.runningTime.text = ""
             self.sizeOfData.text = ""
+
+            self.player?.play()
 
             if manager.isGyroAvailable {
                 print("Gyro available!")
@@ -357,6 +381,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         request.httpBody = json
         print(request)
         URLSession.shared.dataTask(with:request, completionHandler: {(data, response, error) in
+            print(response!)
             if error != nil {
                 print(error!)
             } else {
@@ -365,9 +390,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                     
                     guard let errors = json?["errors"] as? [[String: Any]] else { return }
                     if errors.count > 0 {
+                        print(errors)
                         // show error
                         return
                     } else {
+                        print("successful")
                         // show confirmation
                     }
                 }
@@ -401,6 +428,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     deinit {
         stopTimer()
+    }
+    
+    @IBAction func onAllAccessory(sender: UISwitch) {
+        if smooth.isOn {
+            self.allSensorData.smooth = 1
+        } else {
+            self.allSensorData.smooth = 0
+        }
     }
 }
 
