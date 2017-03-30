@@ -61,30 +61,27 @@ struct SensorData {
     var magneticFieldX: Double
     var magneticFieldY: Double
     var magneticFieldZ: Double
-
 }
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var scrollView : UIScrollView!
     @IBOutlet weak var map : MKMapView!
 
-    @IBOutlet weak var smooth: UISwitch!
-    @IBOutlet weak var gps : UILabel!
-    @IBOutlet weak var speed : UILabel!
+    @IBOutlet weak var smoothSwitch: UISwitch!
+    @IBOutlet weak var gpsLabel : UILabel!
+    @IBOutlet weak var speedLabel : UILabel!
 
-    @IBOutlet weak var accelerometer : UILabel!
-    @IBOutlet weak var gyroscope : UILabel!
-    @IBOutlet weak var magnetometer : UILabel!
-    @IBOutlet weak var euler : UILabel!
-    @IBOutlet weak var rotation : UILabel!
-    @IBOutlet weak var gravity : UILabel!
-    @IBOutlet weak var userAcceleration : UILabel!
-    @IBOutlet weak var magneticField : UILabel!
-    
-    @IBOutlet weak var runningTime : UILabel!
-    @IBOutlet weak var sizeOfData : UILabel!
+    @IBOutlet weak var accelerometerLabel : UILabel!
+    @IBOutlet weak var gyroscopeLabel : UILabel!
+    @IBOutlet weak var magnetometerLabel : UILabel!
+    @IBOutlet weak var eulerLabel : UILabel!
+    @IBOutlet weak var rotationLabel : UILabel!
+    @IBOutlet weak var gravityLabel : UILabel!
+    @IBOutlet weak var userAccelerationLabel : UILabel!
+    @IBOutlet weak var magneticFieldLabel : UILabel!
+    @IBOutlet weak var runningTimeLabel : UILabel!
+    @IBOutlet weak var sizeOfDataLabel : UILabel!
 
     let manager = CMMotionManager()
     var locationManager: CLLocationManager!
@@ -124,7 +121,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         do {
             player = try AVAudioPlayer(contentsOf: url)
             guard let player = player else { return }
-            
             
             let audioSession = AVAudioSession.sharedInstance()
             try!audioSession.setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers)
@@ -169,6 +165,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         print("Press")
         let name = UserDefaults.standard.string(forKey: "name")
         allSensorData.name = name!
+        allSensorData.time = Date.init()
         
         map.delegate = self
         map.mapType = .standard
@@ -180,161 +177,97 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         if running {
             print("Stop")
-            locationManager.stopUpdatingLocation()
-            startButton.setTitle("Start", for: .normal)
+            stopTimer()
             manager.stopGyroUpdates()
             manager.stopAccelerometerUpdates()
             manager.stopMagnetometerUpdates()
             manager.stopDeviceMotionUpdates()
-            gps.text = ""
-            accelerometer.text = ""
-            gyroscope.text = ""
-            magnetometer.text = ""
-            euler.text = ""
-            rotation.text = ""
-            gravity.text = ""
-            userAcceleration.text = ""
-            magneticField.text = ""
-            stopTimer()
-            saveData()
-            running = false
-            self.runningTime.text = "Running: " + String(format: "%.2f", Date.init().timeIntervalSince(startTime)) + "s"
-            self.player?.stop()
+            locationManager.stopUpdatingLocation()
 
+            gpsLabel.text = ""
+            accelerometerLabel.text = ""
+            gyroscopeLabel.text = ""
+            magnetometerLabel.text = ""
+            eulerLabel.text = ""
+            rotationLabel.text = ""
+            gravityLabel.text = ""
+            userAccelerationLabel.text = ""
+            magneticFieldLabel.text = ""
+
+            // Async JSON encode
+            DispatchQueue.global().async {
+                self.saveData()
+            }
+            
+            running = false
+            self.runningTimeLabel.text = "Running: " + String(format: "%.2f", Date.init().timeIntervalSince(startTime)) + "s"
+            startButton.setTitle("Start", for: .normal)
+
+            self.player?.stop()
         } else {
             running = true
+            allSensorData.data = []
             startButton.setTitle("Stop", for: .normal)
             locationManager.startUpdatingLocation()
             startTimer()
             startTime = Date.init()
-            self.runningTime.text = ""
-            self.sizeOfData.text = ""
+            self.runningTimeLabel.text = ""
+            self.sizeOfDataLabel.text = ""
 
             self.player?.play()
 
             if manager.isGyroAvailable {
                 print("Gyro available!")
                 manager.gyroUpdateInterval = 0.1
-                manager.startGyroUpdates(to: .main) {
-                    [weak self] (data: CMGyroData?, error: Error?) in
-                    OperationQueue.main.addOperation {
-                        self?.gyroscope.text = String(format: "%.2f", data!.rotationRate.x) + ", " + String(format: "%.2f", data!.rotationRate.y) + ", " + String(format: "%.2f", data!.rotationRate.z)
-                        self?.sensorData.gyroscopeX = data!.rotationRate.x
-                        self?.sensorData.gyroscopeY = data!.rotationRate.y
-                        self?.sensorData.gyroscopeZ = data!.rotationRate.z
-                    }
-                }
+                manager.startGyroUpdates()
             }
 
             if manager.isAccelerometerAvailable {
                 print("Accelerometer available!")
                 manager.accelerometerUpdateInterval = 0.1
-                manager.startAccelerometerUpdates(to: OperationQueue.main) {
-                    [weak self] (data: CMAccelerometerData?, error: Error?) in
-                    OperationQueue.main.addOperation {
-                        self?.accelerometer.text = String(format: "%.2f", data!.acceleration.x) + ", " + String(format: "%.2f", data!.acceleration.y) + ", " + String(format: "%.2f", data!.acceleration.z)
-                        self?.sensorData.accelerometerX = data!.acceleration.x
-                        self?.sensorData.accelerometerY = data!.acceleration.y
-                        self?.sensorData.accelerometerZ = data!.acceleration.z
-
-                    }
-                }
+                manager.startAccelerometerUpdates()
             }
             
             if manager.isMagnetometerAvailable {
                 print("Magnetometer available!")
                 manager.magnetometerUpdateInterval = 0.1
                 manager.showsDeviceMovementDisplay = true
-                manager.startMagnetometerUpdates(to: OperationQueue.main) {
-                    [weak self] (data: CMMagnetometerData?, error: Error?) in
-                    OperationQueue.main.addOperation {
-                        self?.magnetometer.text = String(format: "%.2f", data!.magneticField.x) + ", " + String(format: "%.2f", data!.magneticField.y) + ", " + String(format: "%.2f", data!.magneticField.z)
-                        
-                        self?.sensorData.magnetometerX = data!.magneticField.x
-                        self?.sensorData.magnetometerY = data!.magneticField.y
-                        self?.sensorData.magnetometerZ = data!.magneticField.z
-                    }
-                }
+                manager.startMagnetometerUpdates()
             }
             
             if manager.isDeviceMotionAvailable {
                 print("Device motion available!")
                 manager.deviceMotionUpdateInterval = 0.1
-                manager.startDeviceMotionUpdates(to: OperationQueue.main) {
-                    [weak self] (data: CMDeviceMotion?, error: Error?) in
-                    OperationQueue.main.addOperation {
-                        self?.euler.text = String(format: "%.2f", data!.attitude.roll) + ", " + String(format: "%.2f", data!.attitude.pitch) + ", " + String(format: "%.2f", data!.attitude.yaw)
-                        
-                        self?.rotation.text = String(format: "%.2f", data!.rotationRate.x) + ", " + String(format: "%.2f", data!.rotationRate.y) + ", " + String(format: "%.2f", data!.rotationRate.z)
-
-                        self?.gravity.text = String(format: "%.2f", data!.gravity.x) + ", " + String(format: "%.2f", data!.gravity.y) + ", " + String(format: "%.2f", data!.gravity.z)
-
-                        self?.userAcceleration.text = String(format: "%.2f", data!.userAcceleration.x) + ", " + String(format: "%.2f", data!.userAcceleration.y) + ", " + String(format: "%.2f", data!.userAcceleration.z)
-
-                        self?.magneticField.text = String(format: "%.2f", data!.magneticField.field.x) + ", " + String(format: "%.2f", data!.magneticField.field.y) + ", " + String(format: "%.2f", data!.magneticField.field.z)
-                        
-                        
-                        self?.sensorData.roll = data!.attitude.roll
-                        self?.sensorData.pitch = data!.attitude.pitch
-                        self?.sensorData.yaw = data!.attitude.yaw
-
-                        self?.sensorData.rotationX = data!.rotationRate.x
-                        self?.sensorData.rotationY = data!.rotationRate.y
-                        self?.sensorData.rotationZ = data!.rotationRate.z
-                        
-                        self?.sensorData.gravityX = data!.gravity.x
-                        self?.sensorData.gravityY = data!.gravity.y
-                        self?.sensorData.gravityZ = data!.gravity.z
-
-                        self?.sensorData.userAccelerationX = data!.userAcceleration.x
-                        self?.sensorData.userAccelerationY = data!.userAcceleration.y
-                        self?.sensorData.userAccelerationZ = data!.userAcceleration.z
-
-                        self?.sensorData.magneticFieldX = data!.magneticField.field.x
-                        self?.sensorData.magneticFieldY = data!.magneticField.field.y
-                        self?.sensorData.magneticFieldZ = data!.magneticField.field.z
-                    }
-                }
+                manager.startDeviceMotionUpdates()
             }
+        }
+    }
+    
+    @IBAction func onAllAccessory(sender: UISwitch) {
+        if smoothSwitch.isOn {
+            self.allSensorData.smooth = 1
+        } else {
+            self.allSensorData.smooth = 0
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        print("yo")
-        self.speed.text = String(format: "%.2f", manager.location!.speed) + " m/s"
+        self.speedLabel.text = String(format: "%.2f", manager.location!.speed) + " m/s"
         self.sensorData.speed = manager.location!.speed
 
         centerMap(locValue)
     }
-    
-    func currentTime() -> String {
-        // get the current date and time
-        let currentDateTime = Date()
-        
-        // initialize the date formatter and set the style
-        let formatter = DateFormatter()
-        formatter.timeStyle = .medium
-        formatter.dateStyle = .long
-        
-        // get the date time String from the date object
-        return formatter.string(from: currentDateTime) // October 8, 2016 at 10:48:53 PM
-    }
-    
+
     func centerMap(_ center:CLLocationCoordinate2D){
-        self.gps.text = "(" + String(format: "%.6f", center.latitude) + "), (" + String(format: "%.6f", center.longitude) + ")"
+        self.gpsLabel.text = "(" + String(format: "%.6f", center.latitude) + "), (" + String(format: "%.6f", center.longitude) + ")"
         
         let spanX = 0.007
         let spanY = 0.007
         
         let newRegion = MKCoordinateRegion(center:center , span: MKCoordinateSpanMake(spanX, spanY))
         map.setRegion(newRegion, animated: true)
-        
-//        let annotation = MKPointAnnotation()
-//        annotation.coordinate = center
-//        annotation.title = self.currentTime()
-//        map.addAnnotation(annotation)
-
+  
         sensorData.latitude = center.latitude
         sensorData.longitude = center.longitude
         
@@ -364,61 +297,117 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func saveData() {
         do {
-        let dictionary: WrappedDictionary = try wrap(self.allSensorData)
-        let sensorDataAsString = String(describing: dictionary)
-        print("Bytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)))
-        print("KiloBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024))
-        print("MegaBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1048576))
-        self.sizeOfData.text = String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024) + "KB"
+            let dictionary: WrappedDictionary = try wrap(self.allSensorData)
+            let sensorDataAsString = String(describing: dictionary)
+            print("Bytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)))
+            print("KiloBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024))
+            print("MegaBytes: " + String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1048576))
+            self.sizeOfDataLabel.text = String(describing: sensorDataAsString.lengthOfBytes(using: String.Encoding.utf8)/1024) + "KB"
 
-        let json = try JSONSerialization.data(withJSONObject: dictionary, options: [])
-        _ = String(data: json, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-
-        var request = URLRequest(url: URL(string: "http://sensor.jesper.im/save")!)
-//        var request = URLRequest(url: URL(string: "http://10.0.5.243:9292/save")!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = json
-        print(request)
-        URLSession.shared.dataTask(with:request, completionHandler: {(data, response, error) in
-            print(response!)
-            if error != nil {
-                print(error!)
-            } else {
-                do {
-                    guard let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any] else { return }
-                    
-                    guard let errors = json?["errors"] as? [[String: Any]] else { return }
-                    if errors.count > 0 {
-                        print(errors)
-                        // show error
-                        return
-                    } else {
-                        print("successful")
-                        // show confirmation
+            let json = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+            _ = String(data: json, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+            var request = URLRequest(url: URL(string: "http://sensor.jesper.im/save")!)
+            // var request = URLRequest(url: URL(string: "http://10.0.5.243:9292/save")!)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = json
+            URLSession.shared.dataTask(with:request, completionHandler: {(data, response, error) in
+                print(response!)
+                if error != nil {
+                    print(error!)
+                } else {
+                    do {
+                        guard let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any] else { return }
+                        
+                        guard let errors = json?["errors"] as? [[String: Any]] else { return }
+                        if errors.count > 0 {
+                            print(errors)
+                            // show error
+                            return
+                        } else {
+                            print("successful")
+                            // show confirmation
+                        }
                     }
                 }
-            }
-        }).resume()
+            }).resume()
         } catch {
             print(error.localizedDescription)
         }
     }
     
+    func readSensoryData() {
+        if self.manager.isGyroActive {
+            let gyroData: CMGyroData! = self.manager.gyroData
+            self.sensorData.gyroscopeX = gyroData.rotationRate.x
+            self.sensorData.gyroscopeY = gyroData.rotationRate.y
+            self.sensorData.gyroscopeZ = gyroData.rotationRate.z
+        }
+
+        if self.manager.isAccelerometerActive {
+            let accelerometerData: CMAccelerometerData! = self.manager.accelerometerData
+            self.sensorData.accelerometerX = accelerometerData.acceleration.x
+            self.sensorData.accelerometerY = accelerometerData.acceleration.y
+            self.sensorData.accelerometerZ = accelerometerData.acceleration.z
+        }
+
+        if self.manager.isMagnetometerActive {
+            let magnetometerData: CMMagnetometerData! = self.manager.magnetometerData
+            self.sensorData.magnetometerX = magnetometerData.magneticField.x
+            self.sensorData.magnetometerY = magnetometerData.magneticField.y
+            self.sensorData.magnetometerZ = magnetometerData.magneticField.z
+        }
+
+        if self.manager.isDeviceMotionActive {
+            let deviceMotion: CMDeviceMotion! = self.manager.deviceMotion
+            self.sensorData.roll = deviceMotion.attitude.roll
+            self.sensorData.pitch = deviceMotion.attitude.pitch
+            self.sensorData.yaw = deviceMotion.attitude.yaw
+            self.sensorData.rotationX = deviceMotion.rotationRate.x
+            self.sensorData.rotationY = deviceMotion.rotationRate.y
+            self.sensorData.rotationZ = deviceMotion.rotationRate.z
+            self.sensorData.gravityX = deviceMotion.gravity.x
+            self.sensorData.gravityY = deviceMotion.gravity.y
+            self.sensorData.gravityZ = deviceMotion.gravity.z
+            self.sensorData.userAccelerationX = deviceMotion.userAcceleration.x
+            self.sensorData.userAccelerationY = deviceMotion.userAcceleration.y
+            self.sensorData.userAccelerationZ = deviceMotion.userAcceleration.z
+            self.sensorData.magneticFieldX = deviceMotion.magneticField.field.x
+            self.sensorData.magneticFieldY = deviceMotion.magneticField.field.y
+            self.sensorData.magneticFieldZ = deviceMotion.magneticField.field.z
+        }
+        
+        self.gyroscopeLabel.text = String(format: "%.2f", self.sensorData.gyroscopeX) + ", " +
+            String(format: "%.2f", self.sensorData.gyroscopeY) + ", " +
+            String(format: "%.2f", self.sensorData.gyroscopeZ)
+        self.accelerometerLabel.text = String(format: "%.2f", self.sensorData.accelerometerX) + ", " +
+            String(format: "%.2f", self.sensorData.accelerometerY) + ", " +
+            String(format: "%.2f", self.sensorData.accelerometerZ)
+        self.magnetometerLabel.text = String(format: "%.2f", self.sensorData.magnetometerX) + ", " +
+            String(format: "%.2f", self.sensorData.magnetometerY) + ", " +
+            String(format: "%.2f", self.sensorData.magnetometerZ)
+        self.eulerLabel.text = String(format: "%.2f", self.sensorData.roll) + ", " +
+            String(format: "%.2f", self.sensorData.pitch) + ", " +
+            String(format: "%.2f", self.sensorData.yaw)
+        self.rotationLabel.text = String(format: "%.2f", self.sensorData.rotationX) + ", " +
+            String(format: "%.2f", self.sensorData.rotationY) + ", " +
+            String(format: "%.2f", self.sensorData.rotationZ)
+        self.gravityLabel.text = String(format: "%.2f", self.sensorData.gravityX) + ", " +
+            String(format: "%.2f", self.sensorData.gravityY) + ", " +
+            String(format: "%.2f", self.sensorData.gravityZ)
+        self.userAccelerationLabel.text = String(format: "%.2f", self.sensorData.userAccelerationX) + ", " +
+            String(format: "%.2f", self.sensorData.userAccelerationY) + ", " +
+            String(format: "%.2f", self.sensorData.userAccelerationZ)
+        self.magneticFieldLabel.text = String(format: "%.2f", self.sensorData.magneticFieldX) + ", " +
+            String(format: "%.2f", self.sensorData.magneticFieldY) + ", " +
+            String(format: "%.2f", self.sensorData.magneticFieldZ)
+    }
     
     func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.sensorData.time = Date.init()
+            self?.readSensoryData()
             self?.allSensorData.data.append((self?.sensorData)!)
-            print(self?.sensorData.time as Any)
-//            do {
-//            let dictionary: WrappedDictionary = try wrap(self?.allSensorData)
-//            let json = try JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
-//            let string = String(data: json, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-//
-//            } catch {
-//            print(error.localizedDescription)
-//            }
         }
     }
     
@@ -428,14 +417,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     deinit {
         stopTimer()
-    }
-    
-    @IBAction func onAllAccessory(sender: UISwitch) {
-        if smooth.isOn {
-            self.allSensorData.smooth = 1
-        } else {
-            self.allSensorData.smooth = 0
-        }
     }
 }
 

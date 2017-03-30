@@ -17,7 +17,7 @@
 		33AC3AC51E35F2FD00B00CF6 /* driverqualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3AC41E35F2FD00B00CF6 /* driverqualityTests.swift */; };
 		33AC3AD01E35F2FD00B00CF6 /* driverqualityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */; };
 		33BC29371E65D51400B7496A /* star_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 33BC29361E65D51400B7496A /* star_64.png */; };
-		33FCC4CA1E44C47900A4B5E4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FCC4C91E44C47900A4B5E4 /* MapKit.framework */; };
+		79D740AA1E8168B100CA5155 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FCC4C91E44C47900A4B5E4 /* MapKit.framework */; };
 		79FDADD51E77FC610047FC61 /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 79FDADD41E77FC610047FC61 /* silence.mp3 */; };
 		79FDADD71E782F490047FC61 /* bensound-cute.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 79FDADD61E782F490047FC61 /* bensound-cute.mp3 */; };
 /* End PBXBuildFile section */
@@ -56,8 +56,6 @@
 		33AC3ACF1E35F2FD00B00CF6 /* driverqualityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = driverqualityUITests.swift; sourceTree = "<group>"; };
 		33AC3AD11E35F2FD00B00CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		33BC29361E65D51400B7496A /* star_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_64.png; sourceTree = "<group>"; };
-		33F053681E48BC2100BA93E0 /* bikehike_course.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = bikehike_course.gpx; path = ../../Downloads/bikehike_course.gpx; sourceTree = "<group>"; };
-		33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "bikehike_course(1).gpx"; path = "../../Downloads/bikehike_course(1).gpx"; sourceTree = "<group>"; };
 		33FCC4C91E44C47900A4B5E4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		79FDADD41E77FC610047FC61 /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
 		79FDADD61E782F490047FC61 /* bensound-cute.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "bensound-cute.mp3"; sourceTree = "<group>"; };
@@ -68,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33FCC4CA1E44C47900A4B5E4 /* MapKit.framework in Frameworks */,
+				79D740AA1E8168B100CA5155 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,8 +147,6 @@
 		33FCC4C81E44C47900A4B5E4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				33F0536A1E48BCEF00BA93E0 /* bikehike_course(1).gpx */,
-				33F053681E48BC2100BA93E0 /* bikehike_course.gpx */,
 				33FCC4C91E44C47900A4B5E4 /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -180,9 +176,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33AC3AD71E35F2FD00B00CF6 /* Build configuration list for PBXNativeTarget "driverqualityTests" */;
 			buildPhases = (
+				A9A635247F7A3098A58F368F /* [CP] Check Pods Manifest.lock */,
 				33AC3ABC1E35F2FD00B00CF6 /* Sources */,
 				33AC3ABD1E35F2FD00B00CF6 /* Frameworks */,
 				33AC3ABE1E35F2FD00B00CF6 /* Resources */,
+				66FE797A2FC93132508D26CA /* [CP] Embed Pods Frameworks */,
+				A71A29E498EA83688E2381F5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -198,9 +197,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33AC3ADA1E35F2FD00B00CF6 /* Build configuration list for PBXNativeTarget "driverqualityUITests" */;
 			buildPhases = (
+				5DCEB93E79091589F42220E3 /* [CP] Check Pods Manifest.lock */,
 				33AC3AC71E35F2FD00B00CF6 /* Sources */,
 				33AC3AC81E35F2FD00B00CF6 /* Frameworks */,
 				33AC3AC91E35F2FD00B00CF6 /* Resources */,
+				D259A7D9061424E1D975AABF /* [CP] Embed Pods Frameworks */,
+				EAA6B758062C170A1929AEDA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,6 +299,99 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DCEB93E79091589F42220E3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		66FE797A2FC93132508D26CA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverqualityTests/Pods-driverqualityTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A71A29E498EA83688E2381F5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverqualityTests/Pods-driverqualityTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A9A635247F7A3098A58F368F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D259A7D9061424E1D975AABF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverqualityUITests/Pods-driverqualityUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EAA6B758062C170A1929AEDA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverqualityUITests/Pods-driverqualityUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		33AC3AA81E35F2FC00B00CF6 /* Sources */ = {
@@ -459,7 +554,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8BMFQNF45A;
 				INFOPLIST_FILE = driverquality/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = im.jesper.drivequality;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -473,7 +568,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8BMFQNF45A;
 				INFOPLIST_FILE = driverquality/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = im.jesper.drivequality;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
