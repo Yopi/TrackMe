@@ -110,7 +110,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // For use in foreground
         // For use in background
         locationManager.requestAlwaysAuthorization()
-
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
+      
         if CLLocationManager.locationServicesEnabled() {
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
         } else{
@@ -128,6 +130,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             player.prepareToPlay()
             player.volume = 1
             player.numberOfLoops = -1;
+          print("Playing audio")
         } catch let error {
             print(error.localizedDescription)
         }
@@ -270,6 +273,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
         sensorData.latitude = center.latitude
         sensorData.longitude = center.longitude
+        print(String(sensorData.latitude) + ", " + String(sensorData.longitude))
         
         if Date().timeIntervalSince1970 - lastUpdateMap > 1 {
             if lastCoordinatesMap != nil {
@@ -337,6 +341,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func readSensoryData() {
+      print("Reading sensor data")
+      if self.manager.deviceMotion != nil {
         if self.manager.isGyroActive {
             let gyroData: CMGyroData! = self.manager.gyroData
             self.sensorData.gyroscopeX = gyroData.rotationRate.x
@@ -401,6 +407,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.magneticFieldLabel.text = String(format: "%.2f", self.sensorData.magneticFieldX) + ", " +
             String(format: "%.2f", self.sensorData.magneticFieldY) + ", " +
             String(format: "%.2f", self.sensorData.magneticFieldZ)
+      }
     }
     
     func startTimer() {
